@@ -8021,7 +8021,36 @@ window.addEventListener(
 <!-- ========================== -->
 
 
+<script>
 
+/* ===================================== */
+/* FINAL FINORA DASHBOARD FIX */
+/* ===================================== */
+
+window.addEventListener("load", function(){
+
+    setTimeout(function(){
+
+        const account = currentAccount();
+
+        const loggedIn =
+        localStorage.getItem("finoraLoggedIn");
+
+        if(loggedIn === "true" && account){
+
+            /* Make sure the new dashboard is shown */
+            showPage("dashboardPage2");
+
+            /* Load the new dashboard information */
+            updateDashboard2();
+
+        }
+
+    }, 500);
+
+});
+
+</script>
 </body>
 
 </html>
