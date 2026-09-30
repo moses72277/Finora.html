@@ -11,7 +11,6 @@
 <div class="plan"><h3>Standard - ₦10k / month</h3><button id="payStandard" style="background:#10b981">Subscribe Standard</button></div>
 <button id="logout2" style="background:#333">Logout</button><p id="payMsg" style="font-size:13px;color:#5eead4;text-align:center"></p>
 </div></div>
-
 <div id="dashPage" class="hidden"><div class="header" style="display:flex;justify-content:space-between;align-items:center;padding:10px 15px"><div style="display:flex;align-items:center;gap:10px"><div class="logo" style="width:45px;height:45px;font-size:24px;margin:0">F</div><b>Finora</b></div><button id="logoutBtn" style="width:auto;padding:8px 15px;background:#333">Logout</button></div>
 <div class="container"><p id="welcome" style="font-size:13px"></p><p id="subStatus" style="font-size:11px;background:#0005;padding:8px;border-radius:8px;color:#5eead4"></p>
 <div class="stats"><div class="stat">Stock<br><b id="tStock">0</b></div><div class="stat">Sales<br><b id="tCollected">₦0</b></div><div class="stat">Expenses<br><b id="tExpenses">₦0</b></div><div class="stat">Profit<br><b id="tProfit">₦0</b></div></div>
@@ -53,12 +52,38 @@ $("tabSales").onclick=()=>{setTab($("salesSection"));$("tabSales").classList.add
 $("tabExp").onclick=()=>{setTab($("expSection"));$("tabExp").classList.add("active");};
 $("tabCust").onclick=()=>{setTab($("custSection"));$("tabCust").classList.add("active");};
 onAuthStateChanged(auth,async u=>{if(u){user=u;localStorage.setItem('finora_user',JSON.stringify({uid:u.uid,email:u.email,displayName:u.displayName||''}));$("authPage").classList.add("hidden");$("signupPage").classList.add("hidden");$("welcome").textContent="Hello "+(u.displayName||u.email);await checkSub();}else{const saved=getCU();if(saved&&saved.uid){user=saved;$("authPage").classList.add("hidden");$("welcome").textContent="Hello "+(saved.displayName||saved.email||'');await checkSub();}else{$("authPage").classList.remove("hidden");$("dashPage").classList.add("hidden");$("paywall").classList.add("hidden");$("signupPage").classList.add("hidden");}}});
-$("logoutBtn").onclick=()=>{localStorage.removeItem('finora_user');signOut(auth);};$("logout2").onclick=()=>{localStorage.removeItem('finora_user');signOut(auth);};
-async function checkSub(){try{const cu=getCU();if(!cu||!cu.uid){$("paywall").classList.remove("hidden");$("dashPage").classList.add("hidden");$("payMsg").textContent="Please login again";return;}const snap=await getDoc(doc(db,"users",cu.uid));if(!snap.exists()){$("paywall").classList.remove("hidden");$("dashPage").classList.add("hidden");return;}const data=snap.data();userPlan=data;if(!data.plan||!data.expiresAt){$("paywall").classList.remove("hidden");$("dashPage").classList.add("hidden");return;}const exp=new Date(data.expiresAt),now=new Date();if(now>exp){$("paywall").classList.remove("hidden");$("dashPage").classList.add("hidden");$("payMsg").textContent="Expired - renew";return;}$("paywall").classList.add("hidden");$("dashPage").classList.remove("hidden");const days=Math.ceil((exp-now)/86400000);$("subStatus").textContent=data.plan.toUpperCase()+" - "+days+" days left";await loadAll();}catch(e){$("payMsg").textContent="Error: "+e.message;console.log(e);}}
-$("freeBtn").onclick=async()=>{try{const cu=getCU();if(!cu||!cu.uid){$("payMsg").textContent="Session expired, logout and login again";return;}$("payMsg").textContent="Activating...";const exp=new Date();exp.setDate(exp.getDate()+3);await setDoc(doc(db,"users",cu.uid),{plan:"trial",expiresAt:exp.toISOString(),trialUsed:true,email:cu.email||"",name:cu.displayName||""},{merge:true});$("paywall").classList.add("hidden");await checkSub();}catch(e){$("payMsg").textContent="Error: "+e.message;}};
-$("payOrdinary").onclick=async()=>{const cu=getCU();if(!cu)return;const exp=new Date();exp.setDate(exp.getDate()+30);await setDoc(doc(db,"users",cu.uid),{plan:"ordinary",expiresAt:exp.toISOString()},{merge:true});await checkSub();};
-$("payPremium").onclick=async()=>{const cu=getCU();if(!cu)return;const exp=new Date();exp.setDate(exp.getDate()+30);await setDoc(doc(db,"users",cu.uid),{plan:"premium",expiresAt:exp.toISOString()},{merge:true});await checkSub();};
-$("payStandard").onclick=async()=>{const cu=getCU();if(!cu)return;const exp=new Date();exp.setDate(exp.getDate()+30);await setDoc(doc(db,"users",cu.uid),{plan:"standard",expiresAt:exp.toISOString()},{merge:true});await checkSub();};
+$("logoutBtn").onclick=()=>{localStorage.removeItem('finora_user');localStorage.removeItem('finora_plan');signOut(auth);};$("logout2").onclick=()=>{localStorage.removeItem('finora_user');localStorage.removeItem('finora_plan');signOut(auth);};
+async function checkSub(){try{const cu=getCU();if(!cu||!cu.uid){$("paywall").classList.remove("hidden");$("dashPage").classList.add("hidden");return;}
+                              let off=null;try{off=JSON.parse(localStorage.getItem('finora_plan')||'null');}catch(e){}
+try{
+const snap=await getDoc(doc(db,"users",cu.uid));
+if(!snap.exists()){
+if(off&&off.plan){userPlan=off;$("paywall").classList.add("hidden");$("dashPage").classList.remove("hidden");$("subStatus").textContent=off.plan.toUpperCase()+" - Offline Mode";await loadAll();return;}
+$("paywall").classList.remove("hidden");$("dashPage").classList.add("hidden");return;}
+const data=snap.data();userPlan=data;
+if(!data.plan||!data.expiresAt){
+if(off&&off.plan){userPlan=off;$("paywall").classList.add("hidden");$("dashPage").classList.remove("hidden");$("subStatus").textContent=off.plan.toUpperCase()+" - Offline";await loadAll();return;}
+$("paywall").classList.remove("hidden");$("dashPage").classList.add("hidden");return;}
+const exp=new Date(data.expiresAt),now=new Date();
+if(now>exp){$("paywall").classList.remove("hidden");$("dashPage").classList.add("hidden");$("payMsg").textContent="Expired - renew";return;}
+$("paywall").classList.add("hidden");$("dashPage").classList.remove("hidden");const days=Math.ceil((exp-now)/86400000);$("subStatus").textContent=data.plan.toUpperCase()+" - "+days+" days left";await loadAll();
+}catch(e){
+if(off&&off.plan){userPlan=off;$("paywall").classList.add("hidden");$("dashPage").classList.remove("hidden");$("subStatus").textContent=off.plan.toUpperCase()+" - Offline Mode - 3 days";await loadAll();return;}
+$("paywall").classList.remove("hidden");$("payMsg").textContent="Error: "+e.message;
+}}
+$("freeBtn").onclick=async()=>{
+const cu=getCU();
+if(!cu||!cu.uid){$("payMsg").textContent="No user, login again";return;}
+$("payMsg").textContent="Activating...";
+const exp=new Date();exp.setDate(exp.getDate()+3);
+const trialData={plan:"trial",expiresAt:exp.toISOString(),trialUsed:true,email:cu.email||"",name:cu.displayName||""};
+localStorage.setItem('finora_plan', JSON.stringify(trialData));
+try{await setDoc(doc(db,"users",cu.uid),trialData,{merge:true});$("payMsg").textContent="Success!";}catch(e){$("payMsg").textContent="Entering offline mode...";}
+userPlan=trialData;$("paywall").classList.add("hidden");$("dashPage").classList.remove("hidden");$("subStatus").textContent="TRIAL - 3 days left";await loadAll();
+};
+$("payOrdinary").onclick=async()=>{const cu=getCU();if(!cu)return;const exp=new Date();exp.setDate(exp.getDate()+30);const d={plan:"ordinary",expiresAt:exp.toISOString()};localStorage.setItem('finora_plan',JSON.stringify(d));try{await setDoc(doc(db,"users",cu.uid),d,{merge:true});}catch(e){}await checkSub();};
+$("payPremium").onclick=async()=>{const cu=getCU();if(!cu)return;const exp=new Date();exp.setDate(exp.getDate()+30);const d={plan:"premium",expiresAt:exp.toISOString()};localStorage.setItem('finora_plan',JSON.stringify(d));try{await setDoc(doc(db,"users",cu.uid),d,{merge:true});}catch(e){}await checkSub();};
+$("payStandard").onclick=async()=>{const cu=getCU();if(!cu)return;const exp=new Date();exp.setDate(exp.getDate()+30);const d={plan:"standard",expiresAt:exp.toISOString()};localStorage.setItem('finora_plan',JSON.stringify(d));try{await setDoc(doc(db,"users",cu.uid),d,{merge:true});}catch(e){}await checkSub();};
 async function loadAll(){await loadProducts();await loadCustomers();await loadExpenses();update();updateDropdown();}
 $("saveProductBtn").onclick=async()=>{const cu=getCU();const lim=PLANS[userPlan.plan]?.limit||50;if(products.length>=lim)return alert("Limit "+lim);if(!$("pName").value||!$("pQty").value)return alert("Enter name & qty");await addDoc(collection(db,"users",cu.uid,"products"),{name:$("pName").value,qty:Number($("pQty").value),cost:Number($("pCost").value)||0,price:Number($("pPrice").value)||0,createdAt:serverTimestamp()});$("pName").value="";$("pQty").value="";$("pCost").value="";$("pPrice").value="";await loadProducts();update();updateDropdown();};
 $("saveExpBtn").onclick=async()=>{const cu=getCU();await addDoc(collection(db,"users",cu.uid,"expenses"),{name:$("eName").value,amount:Number($("eAmount").value),createdAt:serverTimestamp()});$("eName").value="";$("eAmount").value="";await loadExpenses();update();};
@@ -78,3 +103,4 @@ window.delP=async id=>{if(confirm("Delete?")){const cu=getCU();await deleteDoc(d
 window.delC=async id=>{const cu=getCU();await deleteDoc(doc(db,"users",cu.uid,"customers",id));await loadCustomers();update();};
 window.delE=async id=>{const cu=getCU();await deleteDoc(doc(db,"users",cu.uid,"expenses",id));await loadExpenses();update();};
 </script></body></html>
+                              
