@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Finora</title>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial;background:#121212;color:#fff}
+.header{background:#1a3cff;padding:18px;text-align:center;color:#fff}
+.container{width:92%;max-width:500px;margin:auto}
+.card{background:#1e1e1e;padding:15px;margin:12px 0;border-radius:10px}
+.hidden{display:none}
+button{width:100%;padding:12px;margin-top:8px;border:none;border-radius:8px;background:#1a3cff;color:#fff;font-weight:bold}
+input{width:100%;padding:12px;margin:6px 0;border:1px solid #333;border-radius:8px;background:#2a2a2a;color:#fff}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:#1e1e1e;padding:12px;border-radius:8px;text-align:center}
+.small{width:auto;padding:6px 10px;font-size:12px;margin-right:5px}
+.del{background:#dc2626}.sell{background:#16a34a}.wa{background:#25D366}
+.tabs{display:flex;gap:5px;margin:10px 0}.tab{flex:1;padding:10px;background:#2a2a2a;border-radius:8px;color:#fff}.tab.active{background:#1a3cff}
+.paywall{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:999;display:flex;align-items:center;justify-content:center;padding:12px;overflow:auto}
+.payBox{background:#1e1e1e;padding:18px;border-radius:15px;max-width:400px;width:100%}
+.plan{border:2px solid #333;border-radius:12px;padding:12px;margin:10px 0}
+.plan.free{border-color:#16a34a;background:#16a34a15}.plan.best{border-color:#1a3cff;background:#1a3cff15}
+.low{background:#dc26261a;border:1px solid #dc2626;padding:8px;border-radius:8px;color:#f87171;font-size:12px;margin-top:5px}
+.msg{background:#2a2a2a;padding:10px;border-radius:7px;margin-top:8px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+
+<div id="authPage"><div class="header"><h1>Finora</h1></div><div class="container"><div class="card"><h2>Login</h2><input id="loginEmail" placeholder="Email"><input id="loginPassword" type="password" placeholder="Password"><button id="loginBtn">Login</button><button id="showSignup">Create Account</button><div id="authMsg" class="msg"></div></div></div></div>
+
+<div id="signupPage" class="hidden"><div class="header"><h1>Create Account</h1></div><div class="container"><div class="card"><input id="signupName" placeholder="Shop Name"><input id="signupEmail" placeholder="Email"><input id="signupPassword" type="password" placeholder="Password"><button id="signupBtn">Create</button><button id="backLogin">Back</button><div id="signupMsg" class="msg"></div></div></div></div>
+
+<div id="paywall" class="paywall hidden"><div class="payBox"><h2>Choose Plan</h2><div id="freePlanDiv" class="plan free"><h3>🎁 FREE 3 Days</h3><button onclick="startFreeTrial()" style="background:#16a34a">Start Free Trial</button></div><div class="plan"><h3>Ordinary ₦3k</h3><p>50 Products, No WhatsApp</p><button onclick="payFor('ordinary',3000)" style="background:#333">Pay ₦3k</button></div><div class="plan best"><h3>⭐ Premium ₦5k</h3><p>200 Products + WhatsApp</p><button onclick="payFor('premium',5000)">Pay ₦5k</button></div><div class="plan"><h3>Standard ₦10k</h3><p>Unlimited</p><button onclick="payFor('standard',10000)" style="background:#16a34a">Pay ₦10k</button></div><button id="logout2">Logout</button></div></div>
+
+<div id="dashPage" class="hidden">
+<div class="header"><h2>Finora</h2><p id="welcome"></p><p id="subStatus" style="font-size:12px;background:#0008;padding:6px;border-radius:5px"></p><button id="logout">Logout</button></div>
+<div class="container">
+<div class="stats"><div class="stat">Stock<br><b id="tStock">0</b></div><div class="stat">Sales<br><b id="tCollected">₦0</b></div><div class="stat">Expenses<br><b id="tExpenses">₦0</b></div><div class="stat">Profit<br><b id="tProfit">₦0</b></div></div>
+<div class="tabs"><button id="tabInv" class="tab active">Inventory</button><button id="tabSales" class="tab">Sales</button><button id="tabExp" class="tab">Expenses</button></div>
+
+<div id="invSection" class="card">
+<h3>Add to Stock</h3><p id="limitInfo" style="font-size:12px;color:#fbbf24"></p>
+<input id="pName" placeholder="Product"><input id="pQty" type="number" placeholder="Qty"><input id="pCost" type="number" placeholder="Cost"><input id="pPrice" type="number" placeholder="Price"><button id="saveProduct">Add</button>
+<h3>Current Stock <span style="font-size:12px;color:#f87171">🔴 Red = Low Stock (≤5)</span></h3><input id="searchStock" placeholder="Search..."><div id="stockList"></div>
+</div>
+
+<div id="salesSection" class="card hidden"><h3>Sales + WhatsApp Receipt</h3><div id="cList"></div></div>
+<div id="expSection" class="card hidden"><h3>Expenses</h3><input id="eName" placeholder="Name"><input id="eAmount" type="number" placeholder="Amount"><button id="saveExp">Save</button><div id="eList"></div></div>
+</div></div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,updateProfile} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,collection,addDoc,getDocs,deleteDoc,doc,serverTimestamp,updateDoc,setDoc,getDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const cfg={apiKey:"AIzaSyBVbRIOthbZxre5BL4r-hb5BoRP_DRGOZE",authDomain:"finora-1829e.firebaseapp.com",projectId:"finora-1829e"};
+const app=initializeApp(cfg),auth=getAuth(app),db=getFirestore(app);
+let user=null,customers=[],expenses=[],products=[],userPlan={plan:null};
+const PLANS={ordinary:{limit:50},premium:{limit:200},standard:{limit:999999},trial:{limit:200}};
+async function directLogin(e,p){const url=`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${cfg.apiKey}`;const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,password:p,returnSecureToken:true})});const d=await r.json();if(!r.ok)throw new Error(d.error.message);await signInWithEmailAndPassword(auth,e,p).catch(()=>setTimeout(()=>location.reload(),800));}
+async function directSignup(e,p,n){const url=`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${cfg.apiKey}`;const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,password:p,returnSecureToken:true})});const d=await r.json();if(!r.ok)throw new Error(d.error.message);await signInWithEmailAndPassword(auth,e,p).then(async()=>{if(n)await updateProfile(auth.currentUser,{displayName:n});await setDoc(doc(db,"users",auth.currentUser.uid),{email:e,name:n||"",plan:null,expiresAt:null,trialUsed:false,createdAt:serverTimestamp()},{merge:true});}).catch(()=>location.reload());}
+showSignup.onclick=()=>{authPage.classList.add("hidden");signupPage.classList.remove("hidden");};
+backLogin.onclick=()=>{signupPage.classList.add("hidden");authPage.classList.remove("hidden");};
+signupBtn.onclick=async()=>{try{signupMsg.textContent="Creating...";await directSignup(signupEmail.value,signupPassword.value,signupName.value);}catch(e){signupMsg.textContent=e.message;}};
+loginBtn.onclick=async()=>{try{authMsg.textContent="Logging...";await directLogin(loginEmail.value,loginPassword.value);}catch(e){authMsg.textContent=e.message;}};
+tabInv.onclick=()=>{invSection.classList.remove("hidden");salesSection.classList.add("hidden");expSection.classList.add("hidden");tabInv.classList.add("active");tabSales.classList.remove("active");tabExp.classList.remove("active");};
+tabSales.onclick=()=>{invSection.classList.add("hidden");salesSection.classList.remove("hidden");expSection.classList.add("hidden");tabSales.classList.add("active");tabInv.classList.remove("active");tabExp.classList.remove("active");};
+tabExp.onclick=()=>{invSection.classList.add("hidden");salesSection.classList.add("hidden");expSection.classList.remove("hidden");tabExp.classList.add("active");tabInv.classList.remove("active");tabSales.classList.remove("active");};
+onAuthStateChanged(auth,async u=>{if(u){user=u;authPage.classList.add("hidden");signupPage.classList.add("hidden");welcome.textContent=u.displayName||u.email;await checkSub();}else{authPage.classList.remove("hidden");dashPage.classList.add("hidden");paywall.classList.add("hidden");}});
+logout.onclick=()=>signOut(auth);logout2.onclick=()=>signOut(auth);
+async function checkSub(){const snap=await getDoc(doc(db,"users",user.uid));if(!snap.exists()){paywall.classList.remove("hidden");return;}const data=snap.data();userPlan=data;if(!data.plan||!data.expiresAt){paywall.classList.remove("hidden");dashPage.classList.add("hidden");if(data.trialUsed)freePlanDiv.classList.add("hidden");return;}const expDate=new Date(data.expiresAt),now=new Date();if(now>expDate){paywall.classList.remove("hidden");dashPage.classList.add("hidden");freePlanDiv.classList.add("hidden");return;}paywall.classList.add("hidden");dashPage.classList.remove("hidden");const days=Math.ceil((expDate-now)/86400000);subStatus.textContent=data.plan==="trial"?`FREE TRIAL - ${days} days left`:`${data.plan.toUpperCase()} - ${days} days left`;await loadAll();}
+window.startFreeTrial=async()=>{const snap=await getDoc(doc(db,"users",user.uid));if(snap.exists()&&snap.data().trialUsed)return alert("Used");const exp=new Date();exp.setDate(exp.getDate()+3);await setDoc(doc(db,"users",user.uid),{plan:"trial",expiresAt:exp.toISOString(),trialUsed:true},{merge:true});alert("Started");paywall.classList.add("hidden");await checkSub();};
+window.payFor=async(plan,amount)=>{const exp=new Date();exp.setDate(exp.getDate()+30);await setDoc(doc(db,"users",user.uid),{plan:plan,expiresAt:exp.toISOString()},{merge:true});paywall.classList.add("hidden");await checkSub();};
+async function loadAll(){await loadProducts();await loadCustomers();await loadExpenses();update();}
+saveProduct.onclick=async()=>{const limit=PLANS[userPlan.plan]?.limit||50;if(products.length>=limit)return alert(`Limit ${limit}`);if(!pName.value||!pQty.value)return alert("Fill");await addDoc(collection(db,"users",user.uid,"products"),{name:pName.value,qty:Number(pQty.value),cost:Number(pCost.value)||0,price:Number(pPrice.value)||0,createdAt:serverTimestamp()});pName.value="";pQty.value="";pCost.value="";pPrice.value="";await loadProducts();update();};
+saveExp.onclick=async()=>{if(userPlan.plan==="ordinary")return alert("Upgrade");await addDoc(collection(db,"users",user.uid,"expenses"),{name:eName.value,amount:Number(eAmount.value),createdAt:serverTimestamp()});eName.value="";eAmount.value="";await loadExpenses();update();};
+async function loadProducts(){const s=await getDocs(collection(db,"users",user.uid,"products"));products=[];s.forEach(d=>products.push({id:d.id,...d.data()}));showProducts();}
+function showProducts(){const q=searchStock.value.toLowerCase();const f=products.filter(p=>(p.name||"").toLowerCase().includes(q));stockList.innerHTML=f.length?f.map(p=>{const isLow=Number(p.qty)<=5;return `<div style="padding:10px 0;border-bottom:1px solid #333;${isLow?'background:#dc26261a;padding:10px;border-radius:8px;':''}"><b>${p.name} ${isLow?'🔴 LOW STOCK!':''}</b><br>Qty: <b style="${isLow?'color:#f87171':''}">${p.qty}</b> | ₦${p.price}${isLow?`<div class="low">⚠️ Only ${p.qty} left! Restock now to avoid losing sales</div>`:''}<br><button class="small sell" onclick="sellP('${p.id}')">Sell</button> <button class="small del" onclick="delP('${p.id}')">Delete</button></div>`}).join(""):"No stock";tStock.textContent=products.reduce((a,b)=>a+Number(b.qty||0),0);limitInfo.textContent=`${userPlan.plan} - ${products.length}/${PLANS[userPlan.plan]?.limit}`;}
+searchStock.oninput=showProducts;
+async function loadCustomers(){const s=await getDocs(collection(db,"users",user.uid,"customers"));customers=[];s.forEach(d=>customers.push({id:d.id,...d.data()}));showCustomers();}
+async function loadExpenses(){const s=await getDocs(collection(db,"users",user.uid,"expenses"));expenses=[];s.forEach(d=>expenses.push({id:d.id,...d.data()}));showExpenses();}
+function showCustomers(){cList.innerHTML=customers.length?customers.map(c=>{const canWA=userPlan.plan!=="ordinary";const waBtn=canWA?`<button class="small wa" onclick="sendWA('${c.id}')">WhatsApp</button>`:`<button class="small" style="background:#333">🔒 Upgrade</button>`;return `<div style="padding:10px 0;border-bottom:1px solid #333"><b>${c.name}</b><br>${c.product} x${c.qty}=₦${Number(c.amount).toLocaleString()}<br>${waBtn} <button class="small del" onclick="delC('${c.id}')">Del</button></div>`}).join(""):"No sales";}
+function showExpenses(){eList.innerHTML=expenses.map(e=>`<div>${e.name} - ₦${e.amount} <button class="small del" onclick="delE('${e.id}')">X</button></div>`).join("");}
+function update(){const inc=customers.reduce((t,i)=>t+Number(i.amount||0),0),exp=expenses.reduce((t,i)=>t+Number(i.amount||0),0);tCollected.textContent="₦"+inc.toLocaleString();tExpenses.textContent="₦"+exp.toLocaleString();tProfit.textContent="₦"+(inc-exp).toLocaleString();}
+window.sellP=async id=>{const p=products.find(x=>x.id===id);const qty=Number(prompt(`Sell ${p.name}? Max ${p.qty}`));if(!qty||qty>p.qty)return alert("Invalid");const cust=prompt("Customer Name?")||"Customer";const phone=prompt("Phone?")||"";const total=qty*Number(p.price);await updateDoc(doc(db,"users",user.uid,"products",id),{qty:Number(p.qty)-qty});await addDoc(collection(db,"users",user.uid,"customers"),{name:cust,product:p.name,qty:qty,amount:total,phone:phone,createdAt:serverTimestamp()});await loadProducts();await loadCustomers();update();if(userPlan.plan!=="ordinary"&&phone){const text=`🧾 Receipt from ${user.displayName||"My Shop"}\nThanks ${cust}!\n${p.name} x${qty} = ₦${total.toLocaleString()}`;const num=phone.replace(/\D/g,"");const waNum=num.startsWith("0")?"234"+num.slice(1):num;window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(text)}`,"_blank");}};
+window.sendWA=async cid=>{if(userPlan.plan==="ordinary")return alert("Upgrade");const c=customers.find(x=>x.id===cid);const text=`🧾 Receipt from ${user.displayName||"My Shop"}\nHello ${c.name},\n${c.product} x${c.qty} = ₦${Number(c.amount).toLocaleString()}\nThanks! 🙏`;if(c.phone){const num=c.phone.replace(/\D/g,"");const waNum=num.startsWith("0")?"234"+num.slice(1):num;window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(text)}`,"_blank");}else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,"_blank");};
+window.delP=async id=>{await deleteDoc(doc(db,"users",user.uid,"products",id));await loadProducts();update();};
+window.delC=async id=>{await deleteDoc(doc(db,"users",user.uid,"customers",id));await loadCustomers();update();};
+window.delE=async id=>{await deleteDoc(doc(db,"users",user.uid,"expenses",id));await loadExpenses();update();};
+</script>
+</body>
+</html>
