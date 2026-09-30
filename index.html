@@ -1309,6 +1309,131 @@ seconds + "s remaining";
 
 function subscribe(plan){
 
+const account = getAccount();
+
+if(!account){
+
+alert("Please create an account first.");
+
+showPage("createPage");
+
+return;
+
+}
+
+
+/* PLAN PRICES */
+
+let price = "";
+
+if(plan === "Ordinary"){
+price = "₦3,000";
+}
+
+if(plan === "Premium"){
+price = "₦5,000";
+}
+
+if(plan === "Standard"){
+price = "₦10,000";
+}
+
+
+/* CURRENT PLAN */
+
+if(account.plan === plan){
+
+alert(
+"You are already subscribed to the " +
+plan +
+" plan."
+);
+
+openDashboard();
+
+return;
+
+}
+
+
+/* UPGRADE CONFIRMATION */
+
+const answer = confirm(
+
+"FINORA SUBSCRIPTION\n\n" +
+
+"Plan: " +
+plan +
+"\n" +
+
+"Price: " +
+price +
+" / month\n\n" +
+
+"Features included:\n" +
+
+"✓ Business Dashboard\n" +
+"✓ Products\n" +
+"✓ Customers\n" +
+"✓ Sales Records\n" +
+"✓ Reports\n\n" +
+
+"Continue with this plan?"
+
+);
+
+
+if(!answer){
+
+return;
+
+}
+
+
+/* ACTIVATE PLAN */
+
+account.plan = plan;
+
+account.trialActive = false;
+
+account.subscriptionStart =
+Date.now();
+
+
+/* SAVE ACCOUNT */
+
+saveAccount(account);
+
+
+/* KEEP USER LOGGED IN */
+
+localStorage.setItem(
+"finoraLoggedIn",
+"true"
+);
+
+
+/* SUCCESS MESSAGE */
+
+alert(
+
+"🎉 Subscription Successful!\n\n" +
+
+"Welcome to Finora " +
+plan +
+".\n\n" +
+
+"Your plan is now active."
+
+);
+
+
+/* OPEN DASHBOARD */
+
+openDashboard();
+
+}
+
 const account =
 getAccount();
 
