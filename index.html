@@ -7,33 +7,42 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
 margin:0;
-font-family:Arial;
+font-family:Arial,sans-serif;
 background:#f4f7f5;
 color:#17221b;
 }
+
 .page{
 display:none;
 min-height:100vh;
 padding:20px;
 }
-.active{display:block}
+
+.page.active{
+display:block;
+}
+
 .container{
 max-width:500px;
 margin:auto;
 }
+
 .logo{
 text-align:center;
-font-size:32px;
+font-size:34px;
 font-weight:bold;
 color:#16834b;
-margin:30px 0 10px;
+margin:30px 0 8px;
 }
+
 .subtitle{
 text-align:center;
 color:#777;
 }
+
 .card{
 background:white;
 padding:20px;
@@ -41,6 +50,7 @@ border-radius:18px;
 box-shadow:0 5px 20px #0001;
 margin-top:20px;
 }
+
 input{
 width:100%;
 padding:14px;
@@ -49,6 +59,7 @@ border:1px solid #ddd;
 border-radius:10px;
 font-size:16px;
 }
+
 button{
 width:100%;
 padding:14px;
@@ -57,20 +68,31 @@ border-radius:10px;
 margin-top:10px;
 font-weight:bold;
 font-size:16px;
+cursor:pointer;
 }
+
 .green{
 background:#16834b;
 color:white;
 }
+
 .gray{
 background:#e8ece9;
 }
+
+.red{
+background:#d93636;
+color:white;
+}
+
 .link{
 text-align:center;
 color:#16834b;
 font-weight:bold;
 margin-top:15px;
+cursor:pointer;
 }
+
 .error{
 background:#ffe0e0;
 color:#a00000;
@@ -78,16 +100,65 @@ padding:12px;
 border-radius:10px;
 margin:10px 0;
 }
+
+.success{
+background:#dcf8e8;
+color:#087536;
+padding:12px;
+border-radius:10px;
+margin:10px 0;
+}
+
+.item{
+background:white;
+padding:15px;
+border-radius:14px;
+margin-top:12px;
+box-shadow:0 3px 12px #0001;
+}
+
+.locked{
+background:#fff3cd;
+padding:20px;
+border-radius:15px;
+margin-top:15px;
+text-align:center;
+}
+
+.lock{
+font-size:35px;
+}
+
+.empty{
+background:white;
+padding:20px;
+border-radius:14px;
+text-align:center;
+margin-top:15px;
+color:#777;
+}
+
+.plan{
+border:2px solid #e5e5e5;
+}
+
 </style>
 </head>
 
 <body>
 
+
+<!-- LOGIN -->
+
 <div id="loginPage" class="page active">
+
 <div class="container">
 
 <div class="logo">Finora</div>
-<div class="subtitle">Manage your business easily</div>
+
+<div class="subtitle">
+Manage your business easily
+</div>
 
 <div class="card">
 
@@ -124,14 +195,21 @@ Forgot Password?
 </div>
 
 </div>
-</div>
+
 </div>
 
+</div>
+
+
+
+<!-- CREATE ACCOUNT -->
 
 <div id="createPage" class="page">
+
 <div class="container">
 
 <div class="logo">Finora</div>
+
 <div class="subtitle">
 Create your Finora account
 </div>
@@ -174,11 +252,17 @@ Already have an account? Login
 </div>
 
 </div>
-</div>
+
 </div>
 
+</div>
+
+
+
+<!-- FORGOT PASSWORD -->
 
 <div id="forgotPage" class="page">
+
 <div class="container">
 
 <div class="logo">Finora</div>
@@ -190,7 +274,7 @@ Already have an account? Login
 <input
 id="forgotEmail"
 type="email"
-placeholder="Email">
+placeholder="Your Email">
 
 <input
 id="newPassword"
@@ -200,7 +284,7 @@ placeholder="New Password">
 <input
 id="confirmNewPassword"
 type="password"
-placeholder="Confirm Password">
+placeholder="Confirm New Password">
 
 <div id="forgotMessage"></div>
 
@@ -217,20 +301,27 @@ Back to Login
 </div>
 
 </div>
+
 </div>
+
 </div>
+
+
+
 <!-- PLANS -->
 
 <div id="plansPage" class="page">
+
 <div class="container">
 
 <div class="logo">Finora</div>
 
 <div class="subtitle">
-Choose your Finora plan
+Choose your plan
 </div>
 
-<div class="card">
+
+<div class="card plan">
 
 <h2>🎁 3-Day Free Trial</h2>
 
@@ -251,11 +342,10 @@ Start Free Trial
 </div>
 
 
-<div class="card">
+
+<div class="card plan">
 
 <h2>₦3,000 Ordinary</h2>
-
-<h2>₦3,000 / month</h2>
 
 <p>✓ 50 Products</p>
 <p>✓ 100 Customers</p>
@@ -268,17 +358,16 @@ Start Free Trial
 <button
 class="green"
 onclick="subscribe('Ordinary')">
-Choose Ordinary
+Choose ₦3,000
 </button>
 
 </div>
 
 
-<div class="card">
+
+<div class="card plan">
 
 <h2>⭐ ₦5,000 Premium</h2>
-
-<h2>₦5,000 / month</h2>
 
 <p>✓ 200 Products</p>
 <p>✓ 500 Customers</p>
@@ -296,17 +385,16 @@ Choose Ordinary
 <button
 class="green"
 onclick="subscribe('Premium')">
-Choose Premium
+Choose ₦5,000
 </button>
 
 </div>
 
 
-<div class="card">
+
+<div class="card plan">
 
 <h2>🚀 ₦10,000 Standard</h2>
-
-<h2>₦10,000 / month</h2>
 
 <p>✓ 1,000 Products</p>
 <p>✓ 2,000 Customers</p>
@@ -324,19 +412,24 @@ Choose Premium
 <button
 class="green"
 onclick="subscribe('Standard')">
-Choose Standard
+Choose ₦10,000
 </button>
 
 </div>
 
 </div>
+
 </div>
+
 
 
 <!-- DASHBOARD -->
 
 <div id="dashboardPage" class="page">
+
 <div class="container">
+
+<div class="logo">Finora</div>
 
 <div class="card">
 
@@ -362,21 +455,32 @@ class="card">
 <div class="card">
 
 <h3>📦 Products</h3>
-<strong id="totalProducts">0</strong>
+
+<strong id="totalProducts">
+0
+</strong>
 
 </div>
+
 
 <div class="card">
 
 <h3>👥 Customers</h3>
-<strong id="totalCustomers">0</strong>
+
+<strong id="totalCustomers">
+0
+</strong>
 
 </div>
+
 
 <div class="card">
 
 <h3>💰 Total Sales</h3>
-<strong id="totalSales">₦0</strong>
+
+<strong id="totalSales">
+₦0
+</strong>
 
 </div>
 
@@ -418,21 +522,25 @@ onclick="openAnalytics()">
 </button>
 
 <button
-style="background:#d93636;color:white"
+class="red"
 onclick="logout()">
 Logout
 </button>
 
 </div>
+
 </div>
+
 
 
 <!-- PRODUCTS -->
 
 <div id="productsPage" class="page">
+
 <div class="container">
 
-<button onclick="openDashboard()">
+<button
+onclick="openDashboard()">
 ← Back
 </button>
 
@@ -467,15 +575,19 @@ Add Product
 <div id="productList"></div>
 
 </div>
+
 </div>
+
 
 
 <!-- SALES -->
 
 <div id="salesPage" class="page">
+
 <div class="container">
 
-<button onclick="openDashboard()">
+<button
+onclick="openDashboard()">
 ← Back
 </button>
 
@@ -505,13 +617,19 @@ Record Sale
 <div id="salesList"></div>
 
 </div>
+
 </div>
+
+
+
 <!-- CUSTOMERS -->
 
 <div id="customersPage" class="page">
+
 <div class="container">
 
-<button onclick="openDashboard()">
+<button
+onclick="openDashboard()">
 ← Back
 </button>
 
@@ -542,15 +660,19 @@ Add Customer
 <div id="customerList"></div>
 
 </div>
+
 </div>
+
 
 
 <!-- REPORTS -->
 
 <div id="reportsPage" class="page">
+
 <div class="container">
 
-<button onclick="openDashboard()">
+<button
+onclick="openDashboard()">
 ← Back
 </button>
 
@@ -560,22 +682,30 @@ Add Customer
 
 <p>
 Total Revenue:
-<strong id="reportSales">₦0</strong>
+<strong id="reportSales">
+₦0
+</strong>
 </p>
 
 <p>
 Number of Sales:
-<strong id="reportCount">0</strong>
+<strong id="reportCount">
+0
+</strong>
 </p>
 
 <p>
 Total Expenses:
-<strong id="reportExpenses">₦0</strong>
+<strong id="reportExpenses">
+₦0
+</strong>
 </p>
 
 <p>
 Profit:
-<strong id="reportProfit">🔒 Locked</strong>
+<strong id="reportProfit">
+🔒 Locked
+</strong>
 </p>
 
 </div>
@@ -583,15 +713,19 @@ Profit:
 <div id="advancedReport"></div>
 
 </div>
+
 </div>
+
 
 
 <!-- EXPENSES -->
 
 <div id="expensesPage" class="page">
+
 <div class="container">
 
-<button onclick="openDashboard()">
+<button
+onclick="openDashboard()">
 ← Back
 </button>
 
@@ -627,15 +761,19 @@ Add Expense
 </div>
 
 </div>
+
 </div>
+
 
 
 <!-- ANALYTICS -->
 
 <div id="analyticsPage" class="page">
+
 <div class="container">
 
-<button onclick="openDashboard()">
+<button
+onclick="openDashboard()">
 ← Back
 </button>
 
@@ -648,7 +786,9 @@ Add Expense
 </div>
 
 </div>
+
 </div>
+
 
 
 <script>
@@ -661,48 +801,40 @@ Trial:{
 products:20,
 customers:20,
 sales:50,
-lowStock:false,
-whatsapp:false,
 expenses:false,
 profit:false,
-cloud:false,
-analytics:false
+analytics:false,
+lowStock:false
 },
 
 Ordinary:{
 products:50,
 customers:100,
 sales:300,
-lowStock:false,
-whatsapp:false,
 expenses:true,
 profit:false,
-cloud:false,
-analytics:true
+analytics:true,
+lowStock:false
 },
 
 Premium:{
 products:200,
 customers:500,
 sales:Infinity,
-lowStock:true,
-whatsapp:true,
 expenses:true,
 profit:true,
-cloud:true,
-analytics:true
+analytics:true,
+lowStock:true
 },
 
 Standard:{
 products:1000,
 customers:2000,
 sales:Infinity,
-lowStock:true,
-whatsapp:true,
 expenses:true,
 profit:true,
-cloud:true,
-analytics:true
+analytics:true,
+lowStock:true
 }
 
 };
@@ -720,14 +852,19 @@ page.classList.remove("active");
 
 });
 
-document
-.getElementById(id)
-.classList.add("active");
+const page =
+document.getElementById(id);
+
+if(page){
+
+page.classList.add("active");
+
+}
 
 }
 
 
-/* GET ACCOUNT */
+/* ACCOUNT */
 
 function getAccount(){
 
@@ -738,12 +875,18 @@ if(!data){
 return null;
 }
 
+try{
+
 return JSON.parse(data);
+
+}catch(e){
+
+return null;
 
 }
 
+}
 
-/* SAVE ACCOUNT */
 
 function saveAccount(account){
 
@@ -760,35 +903,29 @@ JSON.stringify(account)
 function createAccount(){
 
 const name =
-document.getElementById(
-"createName"
-).value.trim();
+document.getElementById("createName")
+.value.trim();
 
 const email =
-document.getElementById(
-"createEmail"
-).value.trim();
+document.getElementById("createEmail")
+.value.trim();
 
 const password =
-document.getElementById(
-"createPassword"
-).value;
+document.getElementById("createPassword")
+.value;
 
 const confirm =
-document.getElementById(
-"createConfirm"
-).value;
+document.getElementById("createConfirm")
+.value;
 
 const message =
-document.getElementById(
-"createMessage"
-);
+document.getElementById("createMessage");
 
 
 if(!name || !email || !password || !confirm){
 
 message.innerHTML =
-'<div class="error">Fill all fields.</div>';
+'<div class="error">Please fill all fields.</div>';
 
 return;
 
@@ -814,8 +951,6 @@ return;
 
 }
 
-
-/* CREATE NEW ACCOUNT */
 
 const account = {
 
@@ -844,7 +979,6 @@ expenses:[]
 
 saveAccount(account);
 
-
 localStorage.setItem(
 "finoraLoggedIn",
 "true"
@@ -867,19 +1001,15 @@ openDashboard();
 function login(){
 
 const email =
-document.getElementById(
-"loginEmail"
-).value.trim();
+document.getElementById("loginEmail")
+.value.trim();
 
 const password =
-document.getElementById(
-"loginPassword"
-).value;
+document.getElementById("loginPassword")
+.value;
 
 const message =
-document.getElementById(
-"loginMessage"
-);
+document.getElementById("loginMessage");
 
 const account =
 getAccount();
@@ -888,7 +1018,7 @@ getAccount();
 if(!account){
 
 message.innerHTML =
-'<div class="error">No account found. Create an account first.</div>';
+'<div class="error">No account found. Please create an account.</div>';
 
 return;
 
@@ -919,7 +1049,89 @@ openDashboard();
 }
 
 
-/* TRIAL CHECK */
+/* RESET PASSWORD */
+
+function resetPassword(){
+
+const email =
+document.getElementById("forgotEmail")
+.value.trim();
+
+const password =
+document.getElementById("newPassword")
+.value;
+
+const confirm =
+document.getElementById("confirmNewPassword")
+.value;
+
+const message =
+document.getElementById("forgotMessage");
+
+const account =
+getAccount();
+
+
+if(!account){
+
+message.innerHTML =
+'<div class="error">No account found.</div>';
+
+return;
+
+}
+
+
+if(email !== account.email){
+
+message.innerHTML =
+'<div class="error">Email not found.</div>';
+
+return;
+
+}
+
+
+if(password.length < 6){
+
+message.innerHTML =
+'<div class="error">Password must be at least 6 characters.</div>';
+
+return;
+
+}
+
+
+if(password !== confirm){
+
+message.innerHTML =
+'<div class="error">Passwords do not match.</div>';
+
+return;
+
+}
+
+
+account.password =
+password;
+
+saveAccount(account);
+
+
+message.innerHTML =
+'<div class="success">Password changed successfully.</div>';
+
+
+setTimeout(function(){
+
+showPage("loginPage");
+
+},1000);
+
+}
+
+
+/* TRIAL */
 
 function isTrialExpired(account){
 
@@ -931,18 +1143,17 @@ const threeDays =
 3 * 24 * 60 * 60 * 1000;
 
 return Date.now() -
-account.trialStartDate
->= threeDays;
+account.trialStartDate >=
+threeDays;
 
 }
 
-
-/* START TRIAL */
 
 function startTrial(){
 
 const account =
 getAccount();
+
 
 if(!account){
 
@@ -951,12 +1162,42 @@ return;
 
 }
 
-account.plan = "Trial";
+
+if(
+account.trialStartDate &&
+!isTrialExpired(account)
+){
+
+openDashboard();
+return;
+
+}
+
+
+if(
+account.trialStartDate &&
+isTrialExpired(account)
+){
+
+showPage("plansPage");
+
+alert(
+"Your free trial has already ended. Please choose a subscription."
+);
+
+return;
+
+}
+
+
+account.plan =
+"Trial";
 
 account.trialStartDate =
 Date.now();
 
-account.trialActive = true;
+account.trialActive =
+true;
 
 saveAccount(account);
 
@@ -978,27 +1219,32 @@ const account =
 getAccount();
 
 const box =
-document.getElementById(
-"trialBox"
-);
+document.getElementById("trialBox");
+
 
 if(!account || !box){
 return;
 }
 
+
 if(account.plan !== "Trial"){
 
-box.style.display = "none";
+box.style.display =
+"none";
+
 return;
 
 }
 
-box.style.display = "block";
+
+box.style.display =
+"block";
 
 
 if(isTrialExpired(account)){
 
-account.trialActive = false;
+account.trialActive =
+false;
 
 saveAccount(account);
 
@@ -1019,6 +1265,7 @@ return;
 const remaining =
 (3 * 24 * 60 * 60 * 1000) -
 (Date.now() - account.trialStartDate);
+
 
 const days =
 Math.floor(
@@ -1047,6 +1294,7 @@ Math.floor(
 1000
 );
 
+
 box.innerHTML =
 "🎁 Free Trial: " +
 days + "d " +
@@ -1056,25 +1304,31 @@ seconds + "s remaining";
 
 }
 
-setInterval(
-updateTrialCountdown,
-1000
-);
-  /* SUBSCRIPTION */
+
+/* SUBSCRIBE */
 
 function subscribe(plan){
 
 const account =
 getAccount();
 
+
 if(!account){
 
+alert(
+"Please create an account first."
+);
+
 showPage("createPage");
+
 return;
 
 }
 
-let price = "";
+
+let price =
+"";
+
 
 if(plan === "Ordinary"){
 price = "₦3,000";
@@ -1089,25 +1343,31 @@ price = "₦10,000";
 }
 
 
-const confirmPayment =
+const answer =
 confirm(
 "Finora Subscription\n\n" +
-plan + "\n" +
-price + " / month\n\n" +
-"Continue with this plan?"
+plan +
+"\n" +
+price +
+" / month\n\n" +
+"Activate this plan?"
 );
 
 
-if(!confirmPayment){
+if(!answer){
 return;
 }
 
 
-account.plan = plan;
+account.plan =
+plan;
 
-account.trialActive = false;
+account.trialActive =
+false;
+
 
 saveAccount(account);
+
 
 localStorage.setItem(
 "finoraLoggedIn",
@@ -1116,8 +1376,8 @@ localStorage.setItem(
 
 
 alert(
-"Plan selected successfully!\n\n" +
-"Real payment integration will be connected later."
+plan +
+" plan activated successfully!"
 );
 
 
@@ -1126,7 +1386,7 @@ openDashboard();
 }
 
 
-/* OPEN DASHBOARD */
+/* DASHBOARD */
 
 function openDashboard(){
 
@@ -1147,7 +1407,8 @@ account.plan === "Trial" &&
 isTrialExpired(account)
 ){
 
-account.trialActive = false;
+account.trialActive =
+false;
 
 saveAccount(account);
 
@@ -1166,7 +1427,8 @@ return;
 document.getElementById(
 "welcomeText"
 ).innerText =
-"Welcome, " + account.name;
+"Welcome, " +
+account.name;
 
 
 document.getElementById(
@@ -1184,7 +1446,7 @@ updateTrialCountdown();
 }
 
 
-/* DASHBOARD */
+/* DASHBOARD DATA */
 
 function updateDashboard(){
 
@@ -1223,7 +1485,8 @@ Number(sale.amount);
 document.getElementById(
 "totalSales"
 ).innerText =
-"₦" + total.toLocaleString();
+"₦" +
+total.toLocaleString();
 
 }
 
@@ -1349,7 +1612,8 @@ document.getElementById(
 "productList"
 );
 
-list.innerHTML = "";
+list.innerHTML =
+"";
 
 
 if(account.products.length === 0){
@@ -1367,6 +1631,7 @@ function(product,index){
 
 let lowStock = "";
 
+
 if(product.stock <= 5){
 
 if(
@@ -1377,11 +1642,6 @@ account.plan
 
 lowStock =
 "<p>⚠️ Low Stock</p>";
-
-}else{
-
-lowStock =
-"<p>🔒 Low-stock alerts require Premium.</p>";
 
 }
 
@@ -1407,14 +1667,11 @@ product.stock +
 
 lowStock +
 
-'<button ' +
+'<button class="red" ' +
 'onclick="deleteProduct(' +
 index +
-')" ' +
-'style="background:#d93636;color:white">' +
-
+')">' +
 'Delete' +
-
 '</button>' +
 
 '</div>';
@@ -1552,7 +1809,8 @@ document.getElementById(
 "salesList"
 );
 
-list.innerHTML = "";
+list.innerHTML =
+"";
 
 
 if(account.sales.length === 0){
@@ -1624,32 +1882,23 @@ account.customers.length >= limit
 ){
 
 alert(
-"Customer limit reached.\n\n" +
+  "Customer limit reached.\n\n" +
 "Your plan allows " +
 limit +
 " customers."
 );
 
 return;
-
 }
 
-
 const name =
-document.getElementById(
-"customerName"
-).value.trim();
+document.getElementById("customerName").value.trim();
 
 const phone =
-document.getElementById(
-"customerPhone"
-).value.trim();
+document.getElementById("customerPhone").value.trim();
 
 const message =
-document.getElementById(
-"customerMessage"
-);
-
+document.getElementById("customerMessage");
 
 if(!name){
 
@@ -1657,56 +1906,38 @@ message.innerHTML =
 '<div class="error">Enter customer name.</div>';
 
 return;
-
 }
 
-
 account.customers.push({
-
 name:name,
-
 phone:phone,
-
 date:Date.now()
-
 });
-
 
 saveAccount(account);
 
-
-document.getElementById(
-"customerName"
-).value = "";
-
-document.getElementById(
-"customerPhone"
-).value = "";
-
+document.getElementById("customerName").value = "";
+document.getElementById("customerPhone").value = "";
 
 message.innerHTML =
 '<div class="success">Customer added successfully.</div>';
 
-
 renderCustomers();
-
 updateDashboard();
 
 }
 
 
+/* RENDER CUSTOMERS */
+
 function renderCustomers(){
 
-const account =
-getAccount();
+const account = getAccount();
 
 const list =
-document.getElementById(
-"customerList"
-);
+document.getElementById("customerList");
 
 list.innerHTML = "";
-
 
 if(account.customers.length === 0){
 
@@ -1714,9 +1945,7 @@ list.innerHTML =
 '<div class="empty">No customers yet.</div>';
 
 return;
-
 }
-
 
 account.customers.forEach(
 function(customer,index){
@@ -1733,15 +1962,9 @@ customer.name +
 (customer.phone || "No phone number") +
 '</p>' +
 
-'<button ' +
-'onclick="deleteCustomer(' +
+'<button class="red" onclick="deleteCustomer(' +
 index +
-')" ' +
-'style="background:#d93636;color:white">' +
-
-'Delete' +
-
-'</button>' +
+')">Delete</button>' +
 
 '</div>';
 
@@ -1750,15 +1973,13 @@ index +
 }
 
 
+/* DELETE CUSTOMER */
+
 function deleteCustomer(index){
 
-const account =
-getAccount();
+const account = getAccount();
 
-account.customers.splice(
-index,
-1
-);
+account.customers.splice(index,1);
 
 saveAccount(account);
 
@@ -1767,77 +1988,44 @@ renderCustomers();
 updateDashboard();
 
 }
-
-
-/* REPORTS */
+  /* REPORTS */
 
 function openReports(){
 
 const account =
 getAccount();
 
-
 let salesTotal = 0;
-
-account.sales.forEach(
-function(sale){
-
-salesTotal +=
-Number(sale.amount);
-
-});
-
-
 let expenseTotal = 0;
 
-account.expenses.forEach(
-function(expense){
+account.sales.forEach(function(sale){
 
-expenseTotal +=
-Number(expense.amount);
+salesTotal += Number(sale.amount);
 
 });
 
+account.expenses.forEach(function(expense){
 
-document.getElementById(
-"reportSales"
-).innerText =
-"₦" +
-salesTotal.toLocaleString();
+expenseTotal += Number(expense.amount);
 
+});
 
-document.getElementById(
-"reportCount"
-).innerText =
+document.getElementById("reportSales").innerText =
+"₦" + salesTotal.toLocaleString();
+
+document.getElementById("reportCount").innerText =
 account.sales.length;
 
-
-document.getElementById(
-"reportExpenses"
-).innerText =
-"₦" +
-expenseTotal.toLocaleString();
+document.getElementById("reportExpenses").innerText =
+"₦" + expenseTotal.toLocaleString();
 
 
-if(
-PLAN_LIMITS[
-account.plan
-].profit
-){
+if(PLAN_LIMITS[account.plan].profit){
 
-document.getElementById(
-"reportProfit"
-).innerText =
-"₦" +
-(
-salesTotal -
-expenseTotal
-).toLocaleString();
+document.getElementById("reportProfit").innerText =
+"₦" + (salesTotal - expenseTotal).toLocaleString();
 
-
-document.getElementById(
-"advancedReport"
-).innerHTML =
+document.getElementById("advancedReport").innerHTML =
 
 '<div class="card">' +
 
@@ -1847,10 +2035,7 @@ document.getElementById(
 
 '<p>Net Profit: ₦' +
 
-(
-salesTotal -
-expenseTotal
-).toLocaleString() +
+(salesTotal - expenseTotal).toLocaleString() +
 
 '</p>' +
 
@@ -1858,15 +2043,10 @@ expenseTotal
 
 }else{
 
-document.getElementById(
-"reportProfit"
-).innerText =
+document.getElementById("reportProfit").innerText =
 "🔒 Locked";
 
-
-document.getElementById(
-"advancedReport"
-).innerHTML =
+document.getElementById("advancedReport").innerHTML =
 
 '<div class="locked">' +
 
@@ -1874,12 +2054,11 @@ document.getElementById(
 
 '<h3>Profit Tracking</h3>' +
 
-'<p>Upgrade to Premium ₦5,000/month to unlock this feature.</p>' +
+'<p>Upgrade to Premium ₦5,000/month to unlock.</p>' +
 
 '</div>';
 
 }
-
 
 showPage("reportsPage");
 
@@ -1893,97 +2072,78 @@ function openExpenses(){
 const account =
 getAccount();
 
-const content =
-document.getElementById(
-"expenseContent"
-);
+if(!PLAN_LIMITS[account.plan].expenses){
 
-const lock =
-document.getElementById(
-"expenseLock"
-);
-
-
-if(
-!PLAN_LIMITS[
-account.plan
-].expenses
-){
-
-content.style.display =
-"none";
-
-
-lock.innerHTML =
+document.getElementById("expenseLock").innerHTML =
 
 '<div class="locked">' +
 
 '<div class="lock">🔒</div>' +
 
-'<h3>Expenses Locked</h3>' +
+'<h3>Expenses</h3>' +
 
-'<p>Upgrade to Ordinary ₦3,000/month or higher.</p>' +
+'<p>This feature is available from the Premium plan.</p>' +
+
+'<button class="green" onclick="showPage(\'plansPage\')">' +
+
+'Upgrade to Premium' +
+
+'</button>' +
 
 '</div>';
 
+document.getElementById("expenseContent").style.display =
+"none";
+
 }else{
 
-content.style.display =
+document.getElementById("expenseLock").innerHTML = "";
+
+document.getElementById("expenseContent").style.display =
 "block";
 
-lock.innerHTML = "";
+renderExpenses();
 
 }
-
-
-renderExpenses();
 
 showPage("expensesPage");
 
 }
 
 
+/* ADD EXPENSE */
+
 function addExpense(){
 
 const account =
 getAccount();
 
+const name =
+document.getElementById("expenseName").value.trim();
 
-if(
-!PLAN_LIMITS[
-account.plan
-].expenses
-){
-
-alert(
-"Expenses are locked on your current plan."
+const amount =
+Number(
+document.getElementById("expenseAmount").value
 );
+
+const message =
+document.getElementById("expenseMessage");
+
+
+if(!name){
+
+message.innerHTML =
+'<div class="error">Enter expense name.</div>';
 
 return;
 
 }
 
 
-const name =
-document.getElementById(
-"expenseName"
-).value.trim();
-
-const amount =
-document.getElementById(
-"expenseAmount"
-).value;
-
-const message =
-document.getElementById(
-"expenseMessage"
-);
-
-
-if(!name || !amount){
+if(!amount || amount <= 0){
 
 message.innerHTML =
-'<div class="error">Fill all fields.</div>';
+'<div class="error">Enter a valid amount.</div>';
 
 return;
 
@@ -1994,33 +2154,27 @@ account.expenses.push({
 
 name:name,
 
-amount:Number(amount),
+amount:amount,
 
 date:Date.now()
 
 });
 
-
 saveAccount(account);
 
+document.getElementById("expenseName").value = "";
 
-document.getElementById(
-"expenseName"
-).value = "";
-
-document.getElementById(
-"expenseAmount"
-).value = "";
-
+document.getElementById("expenseAmount").value = "";
 
 message.innerHTML =
 '<div class="success">Expense added successfully.</div>';
-
 
 renderExpenses();
 
 }
 
+
+/* RENDER EXPENSES */
 
 function renderExpenses(){
 
@@ -2028,9 +2182,7 @@ const account =
 getAccount();
 
 const list =
-document.getElementById(
-"expenseList"
-);
+document.getElementById("expenseList");
 
 list.innerHTML = "";
 
@@ -2038,35 +2190,64 @@ list.innerHTML = "";
 if(account.expenses.length === 0){
 
 list.innerHTML =
-'<div class="empty">No expenses recorded.</div>';
+'<div class="empty">No expenses yet.</div>';
 
 return;
 
 }
 
 
-account.expenses
-.slice()
-.reverse()
-.forEach(
-function(expense){
+account.expenses.forEach(
+
+function(expense,index){
 
 list.innerHTML +=
 
 '<div class="item">' +
 
 '<h3>' +
+
 expense.name +
+
 '</h3>' +
 
 '<p>₦' +
-Number(expense.amount)
-.toLocaleString() +
+
+Number(expense.amount).toLocaleString() +
+
 '</p>' +
+
+'<p>' +
+
+new Date(expense.date).toLocaleDateString() +
+
+'</p>' +
+
+'<button class="red" onclick="deleteExpense(' +
+
+index +
+
+')">Delete</button>' +
 
 '</div>';
 
 });
+
+}
+
+
+/* DELETE EXPENSE */
+
+function deleteExpense(index){
+
+const account =
+getAccount();
+
+account.expenses.splice(index,1);
+
+saveAccount(account);
+
+renderExpenses();
 
 }
 
@@ -2079,16 +2260,10 @@ const account =
 getAccount();
 
 const content =
-document.getElementById(
-"analyticsContent"
-);
+document.getElementById("analyticsContent");
 
 
-if(
-!PLAN_LIMITS[
-account.plan
-].analytics
-){
+if(!PLAN_LIMITS[account.plan].analytics){
 
 content.innerHTML =
 
@@ -2096,9 +2271,15 @@ content.innerHTML =
 
 '<div class="lock">🔒</div>' +
 
-'<h3>Analytics Locked</h3>' +
+'<h2>Advanced Analytics</h2>' +
 
-'<p>Upgrade to Ordinary or higher.</p>' +
+'<p>Advanced analytics is available on Premium and Standard plans.</p>' +
+
+'<button class="green" onclick="showPage(\'plansPage\')">' +
+
+'Upgrade Plan' +
+
+'</button>' +
 
 '</div>';
 
@@ -2109,134 +2290,99 @@ return;
 }
 
 
-let revenue = 0;
+let totalSales = 0;
+
+let totalExpenses = 0;
 
 
-account.sales.forEach(
-function(sale){
+account.sales.forEach(function(sale){
 
-revenue +=
-Number(sale.amount);
+totalSales += Number(sale.amount);
 
 });
+
+
+account.expenses.forEach(function(expense){
+
+totalExpenses += Number(expense.amount);
+
+});
+
+
+const profit =
+totalSales - totalExpenses;
 
 
 content.innerHTML =
 
 '<div class="card">' +
 
-'<h3>📊 Business Analytics</h3>' +
+'<h2>📊 Business Analytics</h2>' +
 
-'<p>Products: ' +
+'<p>Total Sales</p>' +
+
+'<h2>₦' +
+
+totalSales.toLocaleString() +
+
+'</h2>' +
+
+'</div>' +
+
+
+'<div class="card">' +
+
+'<p>Total Expenses</p>' +
+
+'<h2>₦' +
+
+totalExpenses.toLocaleString() +
+
+'</h2>' +
+
+'</div>' +
+
+
+'<div class="card">' +
+
+'<p>Net Profit</p>' +
+
+'<h2>₦' +
+
+profit.toLocaleString() +
+
+'</h2>' +
+
+'</div>' +
+
+
+'<div class="card">' +
+
+'<p>Total Products</p>' +
+
+'<h2>' +
+
 account.products.length +
-'</p>' +
 
-'<p>Customers: ' +
+'</h2>' +
+
+'</div>' +
+
+
+'<div class="card">' +
+
+'<p>Total Customers</p>' +
+
+'<h2>' +
+
 account.customers.length +
-'</p>' +
 
-'<p>Sales: ' +
-account.sales.length +
-'</p>' +
-
-'<p>Revenue: ₦' +
-revenue.toLocaleString() +
-'</p>' +
+'</h2>' +
 
 '</div>';
 
 
 showPage("analyticsPage");
-
-}
-
-
-/* FORGOT PASSWORD */
-
-function resetPassword(){
-
-const email =
-document.getElementById(
-"forgotEmail"
-).value.trim();
-
-const password =
-document.getElementById(
-"newPassword"
-).value;
-
-const confirm =
-document.getElementById(
-"confirmNewPassword"
-).value;
-
-const message =
-document.getElementById(
-"forgotMessage"
-);
-
-const account =
-getAccount();
-
-
-if(!account){
-
-message.innerHTML =
-'<div class="error">No account found.</div>';
-
-return;
-
-}
-
-
-if(email !== account.email){
-
-message.innerHTML =
-'<div class="error">Email not found.</div>';
-
-return;
-
-}
-
-
-if(password.length < 6){
-
-message.innerHTML =
-'<div class="error">Password must be at least 6 characters.</div>';
-
-return;
-
-}
-
-
-if(password !== confirm){
-
-message.innerHTML =
-'<div class="error">Passwords do not match.</div>';
-
-return;
-
-}
-
-
-account.password =
-password;
-
-saveAccount(account);
-
-
-message.innerHTML =
-'<div class="success">Password changed successfully.</div>';
-
-
-setTimeout(
-function(){
-
-showPage("loginPage");
-
-},
-1000
-);
 
 }
 
@@ -2245,8 +2391,9 @@ showPage("loginPage");
 
 function logout(){
 
-localStorage.removeItem(
-"finoraLoggedIn"
+localStorage.setItem(
+"finoraLoggedIn",
+"false"
 );
 
 showPage("loginPage");
@@ -2254,52 +2401,17 @@ showPage("loginPage");
 }
 
 
-/* APP START */
+/* START APP */
 
 window.onload =
 function(){
 
-const account =
-getAccount();
-
-const loggedIn =
-localStorage.getItem(
-"finoraLoggedIn"
-);
-
-
-if(
-account &&
-loggedIn === "true"
-){
-
-if(
-account.plan === "Trial" &&
-isTrialExpired(account)
-){
-
-account.trialActive =
-false;
-
-saveAccount(account);
-
-showPage("plansPage");
-
-}else{
-
-openDashboard();
-
-}
-
-}else{
-
 showPage("loginPage");
-
-}
 
 };
 
 </script>
 
 </body>
+
 </html>
