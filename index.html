@@ -1309,6 +1309,128 @@ seconds + "s remaining";
 
 function subscribe(plan){
 
+const account =
+getAccount();
+
+if(!account){
+
+alert(
+"Please create an account first."
+);
+
+showPage("createPage");
+
+return;
+
+}
+
+
+/* PLAN PRICES */
+
+let price = "";
+
+if(plan === "Ordinary"){
+
+price = "₦3,000";
+
+}
+
+if(plan === "Premium"){
+
+price = "₦5,000";
+
+}
+
+if(plan === "Standard"){
+
+price = "₦10,000";
+
+}
+
+
+/* CHECK CURRENT PLAN */
+
+if(account.plan === plan){
+
+alert(
+"You are already on the " +
+plan +
+" plan."
+);
+
+openDashboard();
+
+return;
+
+}
+
+
+/* CONFIRM */
+
+const answer =
+confirm(
+
+"Finora Subscription\n\n" +
+
+plan +
+" Plan\n" +
+
+price +
+" / month\n\n" +
+
+"Do you want to activate this plan?"
+
+);
+
+
+if(!answer){
+
+return;
+
+}
+
+
+/* ACTIVATE */
+
+account.plan =
+plan;
+
+account.trialActive =
+false;
+
+account.subscriptionStart =
+Date.now();
+
+
+/* SAVE */
+
+saveAccount(account);
+
+localStorage.setItem(
+"finoraLoggedIn",
+"true"
+);
+
+
+/* SUCCESS */
+
+alert(
+
+"🎉 " +
+plan +
+" plan activated successfully!"
+
+);
+
+
+/* OPEN DASHBOARD */
+
+openDashboard();
+
+}
+
+function subscribe(plan){
+
 const account = getAccount();
 
 if(!account){
