@@ -7118,6 +7118,111 @@ window.openAnalytics = function() {
   showPage("analyticsPage");
 };
 
+<script>
+
+/* =========================================================
+   FINORA BUTTON FIX
+   SALES + REPORTS + EXPENSES + ANALYTICS
+   ========================================================= */
+
+window.openSales = function() {
+
+  const account = currentAccount();
+
+  if (!account) {
+    showPage("loginPage");
+    return;
+  }
+
+  if (isTrialExpired(account)) {
+    alert("Your 3-day free trial has ended. Please choose a subscription.");
+    showPage("plansPage");
+    return;
+  }
+
+  loadSaleProducts();
+  loadSaleCustomers();
+  renderSales();
+  updateSaleProduct();
+
+  showPage("salesPage");
+};
+
+
+window.openReports = function() {
+
+  const account = currentAccount();
+
+  if (!account) {
+    showPage("loginPage");
+    return;
+  }
+
+  if (isTrialExpired(account)) {
+    alert("Your 3-day free trial has ended. Please choose a subscription.");
+    showPage("plansPage");
+    return;
+  }
+
+  updateReports();
+
+  showPage("reportsPage");
+};
+
+
+window.openExpenses = function() {
+
+  const account = currentAccount();
+
+  if (!account) {
+    showPage("loginPage");
+    return;
+  }
+
+  if (isTrialExpired(account)) {
+    alert("Your 3-day free trial has ended. Please choose a subscription.");
+    showPage("plansPage");
+    return;
+  }
+
+  if (!expensesAvailable(account)) {
+    alert("Expenses are available from the Ordinary plan upward.");
+    showPage("plansPage");
+    return;
+  }
+
+  renderExpenses();
+
+  showPage("expensesPage");
+};
+
+
+window.openAnalytics = function() {
+
+  const account = currentAccount();
+
+  if (!account) {
+    showPage("loginPage");
+    return;
+  }
+
+  if (isTrialExpired(account)) {
+    alert("Your 3-day free trial has ended. Please choose a subscription.");
+    showPage("plansPage");
+    return;
+  }
+
+  if (!analyticsAvailable(account)) {
+    alert("Advanced Analytics is available on Premium and Standard.");
+    showPage("plansPage");
+    return;
+  }
+
+  updateAnalytics();
+
+  showPage("analyticsPage");
+};
+
 </script>
 </body>
 </html>
