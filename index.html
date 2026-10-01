@@ -7223,6 +7223,204 @@ window.openAnalytics = function() {
   showPage("analyticsPage");
 };
 
+<script>
+
+/* =========================================================
+   FINORA — FINAL DASHBOARD BUTTON CONNECTION
+   ========================================================= */
+
+document.addEventListener("click", function(event) {
+
+  const button = event.target.closest("button");
+
+  if (!button) {
+    return;
+  }
+
+  const text = button.textContent
+    .trim()
+    .toLowerCase();
+
+
+  /* SALES */
+
+  if (
+    text === "sales" ||
+    text.includes("sales")
+  ) {
+
+    if (
+      !button.textContent
+        .toLowerCase()
+        .includes("subscription")
+    ) {
+
+      const account = currentAccount();
+
+      if (!account) {
+        showPage("loginPage");
+        return;
+      }
+
+      if (
+        account.plan === "Trial" &&
+        isTrialExpired(account)
+      ) {
+        showPage("plansPage");
+        return;
+      }
+
+      loadSaleProducts();
+      loadSaleCustomers();
+      renderSales();
+      updateSaleProduct();
+
+      showPage("salesPage");
+
+      return;
+    }
+  }
+
+
+  /* REPORTS */
+
+  if (
+    text === "reports" ||
+    text.includes("reports")
+  ) {
+
+    const account = currentAccount();
+
+    if (!account) {
+      showPage("loginPage");
+      return;
+    }
+
+    if (
+      account.plan === "Trial" &&
+      isTrialExpired(account)
+    ) {
+      showPage("plansPage");
+      return;
+    }
+
+    updateReports();
+
+    showPage("reportsPage");
+
+    return;
+  }
+
+
+  /* EXPENSES */
+
+  if (
+    text === "expenses" ||
+    text.includes("expenses")
+  ) {
+
+    const account = currentAccount();
+
+    if (!account) {
+      showPage("loginPage");
+      return;
+    }
+
+    if (
+      account.plan === "Trial" &&
+      isTrialExpired(account)
+    ) {
+      showPage("plansPage");
+      return;
+    }
+
+    if (
+      account.plan !== "Ordinary" &&
+      account.plan !== "Premium" &&
+      account.plan !== "Standard"
+    ) {
+
+      showPage("plansPage");
+
+      return;
+    }
+
+    renderExpenses();
+
+    showPage("expensesPage");
+
+    return;
+  }
+
+
+  /* ANALYTICS */
+
+  if (
+    text === "analytics" ||
+    text.includes("analytics")
+  ) {
+
+    const account = currentAccount();
+
+    if (!account) {
+      showPage("loginPage");
+      return;
+    }
+
+    if (
+      account.plan === "Trial" &&
+      isTrialExpired(account)
+    ) {
+      showPage("plansPage");
+      return;
+    }
+
+    if (
+      account.plan !== "Premium" &&
+      account.plan !== "Standard"
+    ) {
+
+      showPage("plansPage");
+
+      return;
+    }
+
+    updateAnalytics();
+
+    showPage("analyticsPage");
+
+    return;
+  }
+
+});
+
+
+/* =========================================================
+   FORCE STANDARD PLAN FEATURES
+   ========================================================= */
+
+function verifyStandardPlan() {
+
+  const account = currentAccount();
+
+  if (!account) {
+    return;
+  }
+
+  if (account.plan === "Standard") {
+
+    account.subscriptionStatus =
+      "Active";
+
+    saveAccount(account);
+
+  }
+
+}
+
+
+verifyStandardPlan();
+
 </script>
 </body>
 </html>
